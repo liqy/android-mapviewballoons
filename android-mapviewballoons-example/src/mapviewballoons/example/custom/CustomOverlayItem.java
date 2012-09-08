@@ -15,14 +15,15 @@
 
 package mapviewballoons.example.custom;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
+import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.OverlayItem;
 
 public class CustomOverlayItem extends OverlayItem {
 
 	protected String mImageURL;
-	
-	public CustomOverlayItem(GeoPoint point, String title, String snippet, String imageURL) {
+
+	public CustomOverlayItem(GeoPoint point, String title, String snippet,
+			String imageURL) {
 		super(point, title, snippet);
 		mImageURL = imageURL;
 	}
@@ -34,5 +35,5 @@ public class CustomOverlayItem extends OverlayItem {
 	public void setImageURL(String imageURL) {
 		this.mImageURL = imageURL;
 	}
-	
+
 }

@@ -21,25 +21,25 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
-
+import com.baidu.mapapi.MapView;
+import com.baidu.mapapi.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
-public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItemizedOverlay<CustomOverlayItem> {
+public class CustomItemizedOverlay<Item extends OverlayItem> extends
+		BalloonItemizedOverlay<CustomOverlayItem> {
 
 	private ArrayList<CustomOverlayItem> m_overlays = new ArrayList<CustomOverlayItem>();
 	private Context c;
-	
+
 	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenter(defaultMarker), mapView);
 		c = mapView.getContext();
 	}
 
 	public void addOverlay(CustomOverlayItem overlay) {
-	    m_overlays.add(overlay);
-	    populate();
+		m_overlays.add(overlay);
+		populate();
 	}
 
 	@Override
@@ -62,7 +62,8 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItem
 	@Override
 	protected BalloonOverlayView<CustomOverlayItem> createBalloonOverlayView() {
 		// use our custom balloon view with our custom overlay item type:
-		return new CustomBalloonOverlayView<CustomOverlayItem>(getMapView().getContext(), getBalloonBottomOffset());
+		return new CustomBalloonOverlayView<CustomOverlayItem>(getMapView()
+				.getContext(), getBalloonBottomOffset());
 	}
 
 }

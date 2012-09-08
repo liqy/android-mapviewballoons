@@ -1,5 +1,7 @@
 package com.readystatesoftware.maps;
 
+import com.baidu.mapapi.MapView;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -7,33 +9,32 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 
-import com.google.android.maps.MapView;
-
 public class TapControlledMapView extends MapView implements OnGestureListener {
 
-    private GestureDetector gd;    
-    private OnSingleTapListener singleTapListener;
+	private GestureDetector gd;
+	private OnSingleTapListener singleTapListener;
 
 	public TapControlledMapView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setupGestures();
-    }
+		super(context, attrs);
+		setupGestures();
+	}
 
-    public TapControlledMapView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        setupGestures();
-    }
+	public TapControlledMapView(Context context, AttributeSet attrs,
+			int defStyle) {
+		super(context, attrs, defStyle);
+		setupGestures();
+	}
 
-    public TapControlledMapView(Context context, String apiKey) {
-        super(context, apiKey);
-        setupGestures();
-    }
-    
-    private void setupGestures() {
-    	gd = new GestureDetector(this);  
-        
-        //set the on Double tap listener  
-        gd.setOnDoubleTapListener(new OnDoubleTapListener() {
+	public TapControlledMapView(Context context) {
+		super(context);
+		setupGestures();
+	}
+
+	private void setupGestures() {
+		gd = new GestureDetector(this);
+
+		// set the on Double tap listener
+		gd.setOnDoubleTapListener(new OnDoubleTapListener() {
 
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -46,7 +47,8 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 
 			@Override
 			public boolean onDoubleTap(MotionEvent e) {
-				TapControlledMapView.this.getController().zoomInFixing((int) e.getX(), (int) e.getY());
+				TapControlledMapView.this.getController().zoomInFixing(
+						(int) e.getX(), (int) e.getY());
 				return false;
 			}
 
@@ -54,10 +56,10 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 			public boolean onDoubleTapEvent(MotionEvent e) {
 				return false;
 			}
-        	
-        });
-    }
-    
+
+		});
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		if (this.gd.onTouchEvent(ev)) {
@@ -66,7 +68,7 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 			return super.onTouchEvent(ev);
 		}
 	}
-	
+
 	public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
 		this.singleTapListener = singleTapListener;
 	}
@@ -77,7 +79,8 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 	}
 
 	@Override
-	public void onShowPress(MotionEvent e) {}
+	public void onShowPress(MotionEvent e) {
+	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
@@ -91,14 +94,13 @@ public class TapControlledMapView extends MapView implements OnGestureListener {
 	}
 
 	@Override
-	public void onLongPress(MotionEvent e) {}
+	public void onLongPress(MotionEvent e) {
+	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		return false;
 	}
-    
+
 }
-
-

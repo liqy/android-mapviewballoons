@@ -18,18 +18,18 @@ package mapviewballoons.example.simple;
 import java.util.List;
 
 import mapviewballoons.example.R;
-
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.GeoPoint;
+import com.baidu.mapapi.MapActivity;
+import com.baidu.mapapi.MapController;
+import com.baidu.mapapi.MapView;
+import com.baidu.mapapi.Overlay;
+import com.baidu.mapapi.OverlayItem;
 
 public class SimpleMap extends MapActivity {
 
@@ -39,57 +39,69 @@ public class SimpleMap extends MapActivity {
 	Drawable drawable2;
 	SimpleItemizedOverlay itemizedOverlay;
 	SimpleItemizedOverlay itemizedOverlay2;
-	
+	BMapManager mBMapMan = null;
+
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-		
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        mapView = (MapView) findViewById(R.id.mapview);
+	public void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		mBMapMan = new BMapManager(getApplication());
+		mBMapMan.init("C852FAE280E276186DE82EB547721866666283B0", null);
+		super.initMapActivity(mBMapMan);
+
+	
+
+		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		
+
 		mapOverlays = mapView.getOverlays();
-		
+
 		// first overlay
 		drawable = getResources().getDrawable(R.drawable.marker);
 		itemizedOverlay = new SimpleItemizedOverlay(drawable, mapView);
-		
-		GeoPoint point = new GeoPoint((int)(51.5174723*1E6),(int)(-0.0899537*1E6));
-		OverlayItem overlayItem = new OverlayItem(point, "Tomorrow Never Dies (1997)", 
+
+		GeoPoint point = new GeoPoint((int) (39.90923 * 1E6),
+				(int) (116.397428 * 1E6));
+		OverlayItem overlayItem = new OverlayItem(point,
+				"Tomorrow Never Dies (1997)",
 				"(M gives Bond his mission in Daimler car)");
 		itemizedOverlay.addOverlay(overlayItem);
-		
-		GeoPoint point2 = new GeoPoint((int)(51.515259*1E6),(int)(-0.086623*1E6));
-		OverlayItem overlayItem2 = new OverlayItem(point2, "GoldenEye (1995)", 
-				"(Interiors Russian defence ministry council chambers in St Petersburg)");		
+
+		GeoPoint point2 = new GeoPoint((int) (39.9022 * 1E6),
+				(int) (116.3922 * 1E6));
+		OverlayItem overlayItem2 = new OverlayItem(point2, "GoldenEye (1995)",
+				"(Interiors Russian defence ministry council chambers in St Petersburg)");
 		itemizedOverlay.addOverlay(overlayItem2);
-		
+
 		mapOverlays.add(itemizedOverlay);
-		
+
 		// second overlay
 		drawable2 = getResources().getDrawable(R.drawable.marker2);
 		itemizedOverlay2 = new SimpleItemizedOverlay(drawable2, mapView);
-		
-		GeoPoint point3 = new GeoPoint((int)(51.513329*1E6),(int)(-0.08896*1E6));
-		OverlayItem overlayItem3 = new OverlayItem(point3, "Sliding Doors (1998)", null);
+
+		GeoPoint point3 = new GeoPoint((int) (39.917723 * 1E6),
+				(int) (116.3722 * 1E6));
+		OverlayItem overlayItem3 = new OverlayItem(point3,
+				"Sliding Doors (1998)", null);
 		itemizedOverlay2.addOverlay(overlayItem3);
-		
-		GeoPoint point4 = new GeoPoint((int)(51.51738*1E6),(int)(-0.08186*1E6));
-		OverlayItem overlayItem4 = new OverlayItem(point4, "Mission: Impossible (1996)", 
-				"(Ethan & Jim cafe meeting)");
+
+		GeoPoint point4 = new GeoPoint((int) (51.51738 * 1E6),
+				(int) (-0.08186 * 1E6));
+		OverlayItem overlayItem4 = new OverlayItem(point4,
+				"Mission: Impossible (1996)", "(Ethan & Jim cafe meeting)");
 		itemizedOverlay2.addOverlay(overlayItem4);
-		
+
 		mapOverlays.add(itemizedOverlay2);
-		
+
 		if (savedInstanceState == null) {
-			
+
 			final MapController mc = mapView.getController();
 			mc.animateTo(point2);
 			mc.setZoom(16);
-			
+
 		} else {
-			
+
 			// example restoring focused state of overlays
 			int focused;
 			focused = savedInstanceState.getInt("focused_1", -1);
@@ -100,24 +112,51 @@ public class SimpleMap extends MapActivity {
 			if (focused >= 0) {
 				itemizedOverlay2.setFocus(itemizedOverlay2.getItem(focused));
 			}
-			
+
 		}
-		
-    }
-	
+
+	}
+
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 
 	@Override
+	protected void onDestroy() {
+		if (mBMapMan != null) {
+			mBMapMan.destroy();
+			mBMapMan = null;
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		if (mBMapMan != null) {
+			mBMapMan.stop();
+		}
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		if (mBMapMan != null) {
+			mBMapMan.start();
+		}
+		super.onResume();
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		
+
 		// example saving focused state of overlays
-		if (itemizedOverlay.getFocus() != null) outState.putInt("focused_1", itemizedOverlay.getLastFocusedIndex());
-		if (itemizedOverlay2.getFocus() != null) outState.putInt("focused_2", itemizedOverlay2.getLastFocusedIndex());
+		if (itemizedOverlay.getFocus() != null)
+			outState.putInt("focused_1", itemizedOverlay.getLastFocusedIndex());
+		if (itemizedOverlay2.getFocus() != null)
+			outState.putInt("focused_2", itemizedOverlay2.getLastFocusedIndex());
 		super.onSaveInstanceState(outState);
-	
+
 	}
 
 	@Override
@@ -129,18 +168,16 @@ public class SimpleMap extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == 0) {
-			
+
 			// example hiding balloon before removing overlay
 			if (itemizedOverlay.getFocus() != null) {
 				itemizedOverlay.hideBalloon();
 			}
 			mapOverlays.remove(itemizedOverlay);
 			mapView.invalidate();
-			
+
 		}
 		return true;
 	}
-	
-	
-	
+
 }

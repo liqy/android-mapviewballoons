@@ -21,9 +21,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
-import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
-
+import com.baidu.mapapi.MapView;
+import com.baidu.mapapi.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 
 public class SimpleItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
